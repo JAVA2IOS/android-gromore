@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!-- 所需权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <!--可选权限，申请后用于防作弊功能以及有助于广告平台投放广告-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <permission
+        android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="${applicationId}.openadsdk.permission.TT_PANGOLIN" />
+
+    <!--建议添加“query_all_package”权限，穿山甲将通过此权限在Android R系统上判定广告对应的应用是否在用户的app上安装，避免投放错误的广告，以此提高用户的广告体验。若添加此权限，需要在您的用户隐私文档中声明！ -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+
+    <application>
+        <!-- 穿山甲 start================== -->
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="${applicationId}.TTFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pangle_file_paths" />
+        </provider>
+
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+        <!-- 穿山甲 end================== -->
+
+        <!-- baidu start================== -->
+        <!-- 声明打开落地页的Activity（不建议修改主题配置）-->
+        <activity
+            android:name="com.baidu.mobads.sdk.api.AppActivity"
+            android:configChanges="screenSize|keyboard|keyboardHidden|orientation"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <!-- 声明打开显示激励视频/全屏视频的Activity-->
+        <activity
+            android:name="com.baidu.mobads.sdk.api.MobRewardVideoActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 如果targetSdkVersion设置值>=24，则强烈建议添加以下provider，否则会影响app变现 -->
+        <!-- android:authorities="${packageName}.bd.provider" authorities中${packageName}部分必须替换成app自己的包名 -->
+        <!-- 原来的FileProvider在新版本中改为BdFileProvider,继承自v4的FileProvider,需要在应用内引用support-v4包 -->
+        <provider
+            android:name="com.baidu.mobads.sdk.api.BdFileProvider"
+            android:authorities="${applicationId}.bd.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/bd_file_paths" />
+        </provider>
+        <!-- baidu end================== -->
+
+        <!-- GDT start================== -->
+        <!-- targetSDKVersion >= 24时才需要添加这个provider。provider的authorities属性的值为${applicationId}.fileprovider，请开发者根据自己的${applicationId}来设置这个值，例如本例中applicationId为"com.qq.e.union.demo"。 -->
+        <provider
+            android:name="com.qq.e.comm.GDTFileProvider"
+            android:authorities="${applicationId}.gdt.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/gdt_file_path" />
+        </provider>
+
+        <activity
+            android:name="com.qq.e.ads.PortraitADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.qq.e.ads.LandscapeADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape"
+            tools:replace="android:screenOrientation" />
+
+        <!-- 声明SDK所需要的组件 -->
+        <service
+            android:name="com.qq.e.comm.DownloadService"
+            android:exported="false" />
+        <!-- 请开发者注意字母的大小写，ADActivity，而不是AdActivity -->
+
+        <activity
+            android:name="com.qq.e.ads.ADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+        <!-- GDT end================== -->
+
+    </application>
+</manifest>
